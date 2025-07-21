@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crucigrama de Emociones Profesional</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #000;
+      color: #fff;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    select, button {
+      padding: 10px 15px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      background: gold;
+      color: #000;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    select {
+      min-width: 150px;
+    }
+
+    button:hover {
+      background: goldenrod;
+      transform: scale(1.05);
+    }
+
+    .grid-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(30, minmax(25px, 30px));
+      grid-template-rows: repeat(30, minmax(25px, 30px));
+      gap: 2px;
+      background: #333;
+      padding: 5px;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .cell {
+      position: relative;
+      font-weight: bold;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      background: #fff;
+      color: #000;
+      border-radius: 3px;
+    }
+
+    input.cell {
+      border: 2px solid #ddd;
+      text-align: center;
+      padding: 0;
+    }
+
+    input.cell:focus {
+      outline: 2px solid gold;
+      z-index: 2;
+    }
+
+    .black {
+      background: linear-gradient(145deg, gold, goldenrod);
+      border: 1px solid goldenrod;
+      pointer-events: none;
+    }
+
+    .cell-number {
+      position: absolute;
+      top: 1px;
+      left: 2px;
+      font-size: 8px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .clues {
+      max-width: 1200px;
+      margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .clue-group {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid gold;
+    }
+
+    .clue-group h3 {
+      margin-top: 0;
+      color: gold;
+      border-bottom: 1px solid goldenrod;
+      padding-bottom: 5px;
+    }
+
+    .clue {
+      margin: 8px 0;
+      padding: 8px;
+      cursor: pointer;
+      color: #eee;
+      border-radius: 4px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .clue:hover {
+      background: rgba(255, 215, 0, 0.2);
+    }
+
+    .clue-number {
+      font-weight: bold;
+      margin-right: 8px;
+      color: gold;
+      min-width: 20px;
+    }
+
+    .clue-text {
+      flex: 1;
+    }
+
+    .clue-speaker {
+      margin-left: 10px;
+      color: gold;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+
+    .clue-speaker:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    #mensajeFinal {
+      text-align: center;
+      font-weight: bold;
+      color: #00ff00;
+      font-size: 18px;
+      margin: 20px 0;
+      min-height: 27px;
+    }
+
+    .word-input-container {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .word-input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid gold;
+      border-radius: 4px;
+      margin-right: 10px;
+      width: 200px;
+    }
+
+    .word-input-btn {
+      padding: 10px 15px;
+      background: gold;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(30, minmax(20px, 25px));
+        grid-template-rows: repeat(30, minmax(20px, 25px));
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .clue-group {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: gold;">
+    Cruci-Emociones
+  </h1>
+
+  <div style="text-align: center; margin: 10px 0 20px;">
+    <img src="https://i.postimg.cc/HnvNh2Vm/fcf61468-ce3c-4153-b38e-e16e90664190-removebg-preview.png" 
+         alt="Crucigrama Emociones" 
+         style="max-width: 200px; height: auto;" />
+  </div>
+    
+   <p>Cruci-Emociones es un juego interactivo de crucigramas diseñado para ayudar a niños, jóvenes y adultos a reconocer, comprender y expresar emociones básicas, sociales y complejas. A través de pistas reflexivas y palabras ocultas, los jugadores aprenderán vocabulario emocional mientras ejercitan su mente. Al finalizar el crucigrama, podrán hacer clic en el botón "Terminar" para ver su resultado y conocer cuántas respuestas fueron correctas.</p>
+
+        
+        <h2>Niveles adaptados por edad</h2>
+        
+        <div class="age-levels">
+            <div class="age-level">
+              <li><strong>Niños: Emociones básicas (alegría, tristeza, miedo)</strong>
+                <li><strong>Jóvenes: Emociones sociales (celos, vergüenza, optimismo)</strong>
+                   <li><strong>Adultos: Emociones complejas (desolación, perplejidad, remordimiento)</strong>
+                           
+        <h2>Beneficios</h2>
+        
+        <div class="benefits">
+            <div class="benefit-item">Desarrolla inteligencia emocional - Aprende a identificar y nombrar emociones.</div>
+            <div class="benefit-item">Estimula el vocabulario - Amplía tu lenguaje emocional para expresarte mejor.</div>
+            <div class="benefit-item">Ejercita la mente - Mejora la concentración, memoria y pensamiento lógico.</div>
+            <div class="benefit-item">Herramienta educativa - Ideal para padres, docentes y terapeutas.</div>
+            <div class="benefit-item">Adaptable - Tres niveles de dificultad según la edad del jugador.</div>
+            <div class="benefit-item">Inclusivo - Diseñado para ser accesible y con opción de audio para las pistas.</div>
+        </div>
+            
+                     
+<p style="line-height: 2;"
+   
+
+  <div class="controls">
+  <select id="edad" onchange="mostrarPreguntasPorEdad()">
+
+      <option value="niño">Niño</option>
+      <option value="joven">Joven</option>
+      <option value="adulto">Adulto</option>
+    </select>
+
+  
+    <button onclick="reiniciar()">🔄 Reiniciar</button>
+    <button onclick="terminar()">🚩 Terminar</button>
+  </div>
+
+  <div class="word-input-container">
+    <input type="text" class="word-input" id="wordInput" placeholder="Escribe una palabra completa">
+    <button class="word-input-btn" onclick="insertarPalabra()">Insertar palabra</button>
+  </div>
+
+  <div class="grid-container">
+    <div class="grid" id="crossword"></div>
+  </div>
+
+  <div class="clues">
+    <div class="clue-group" id="horizontales">
+      <h3>Horizontales</h3>
+    </div>
+    <div class="clue-group" id="verticales">
+      <h3>Verticales</h3>
+    </div>
+  </div>
+
+  <div id="mensajeFinal"></div>
+
+  <script>
+    // Datos del crucigrama por edad
+    const crucigramas = {
+      niño: {
+        palabras: [
+          // Horizontales
+          { palabra: "ALEGRIA", pista: "¿Qué emoción sentimos cuando algo nos hace muy felices o reímos mucho?", dir: "H", fila: 5, col: 3 },
+          { palabra: "CULPA", pista: "¿Qué sentimos cuando creemos que hicimos algo malo sin querer?", dir: "H", fila: 8, col: 10 },
+          { palabra: "AMOR", pista: "¿Qué sentimos por nuestros papás, amigos o mascotas?", dir: "H", fila: 12, col: 7 },
+          { palabra: "CELOS", pista: "¿Qué emoción sentimos cuando pensamos que alguien quiere quitar a nuestro mejor amigo?", dir: "H", fila: 15, col: 14 },
+          { palabra: "SORPRESA", pista: "¿Qué emoción sentimos cuando pasa algo inesperado?", dir: "H", fila: 18, col: 5 },
+          { palabra: "ENVIDIA", pista: "¿Cómo se llama lo que sentimos cuando otro tiene algo que nosotros también queremos?", dir: "H", fila: 22, col: 9 },
+          { palabra: "VERGÜENZA", pista: "¿Cómo se llama lo que sentimos cuando hacemos algo que no queríamos que otros vieran?", dir: "H", fila: 25, col: 2 },
+          { palabra: "ESPERANZA", pista: "¿Qué emoción sentimos cuando creemos que todo va a salir bien?", dir: "H", fila: 28, col: 6 },
+
+          // Verticales
+          { palabra: "TRISTEZA", pista: "¿Qué sentimos cuando algo nos pone muy pero muy tristes?", dir: "V", fila: 3, col: 5 },
+          { palabra: "MIEDO", pista: "¿Qué emoción sentimos cuando hay algo que nos asusta o nos da temor?", dir: "V", fila: 5, col: 10 },
+          { palabra: "ASCO", pista: "¿Qué sentimos cuando algo nos parece feo o sucio y no lo queremos ni ver ni oler?", dir: "V", fila: 7, col: 15 },
+          { palabra: "IRA", pista: "¿Cómo se llama la emoción cuando nos enojamos mucho?", dir: "V", fila: 10, col: 20 },
+          { palabra: "CURIOSIDAD", pista: "¿Qué emoción sentimos cuando algo nos gusta mucho y queremos saber más?", dir: "V", fila: 12, col: 25 },
+          { palabra: "ANSIEDAD", pista: "¿Qué emoción sentimos cuando estamos muy nerviosos antes de algo importante?", dir: "V", fila: 15, col: 8 },
+          { palabra: "ORGULLO", pista: "¿Qué emoción sentimos cuando hacemos algo muy bien y queremos mostrarlo?", dir: "V", fila: 18, col: 12 }
+        ]
+      },
+      joven: {
+        palabras: [
+          // Horizontales
+          { palabra: "FELICIDAD", pista: "¿Cómo se llama la emoción que sentimos cuando nos pasa algo bueno o divertido?", dir: "H", fila: 4, col: 4 },
+          { palabra: "ARREPENTIMIENTO", pista: "¿Cómo se llama la emoción que sentimos al reconocer que hicimos algo mal?", dir: "H", fila: 8, col: 2 },
+          { palabra: "AFECTO", pista: "¿Qué emoción sentimos hacia una persona que valoramos mucho?", dir: "H", fila: 12, col: 10 },
+          { palabra: "CELOTIPIA", pista: "¿Qué emoción surge cuando tememos perder a alguien especial por otra persona?", dir: "H", fila: 16, col: 15 },
+          { palabra: "ASOMBRO", pista: "¿Qué emoción sentimos cuando algo inesperado ocurre de repente?", dir: "H", fila: 20, col: 7 },
+          { palabra: "ENVIDIA", pista: "¿Qué emoción sentimos cuando deseamos tener lo que otro tiene?", dir: "H", fila: 23, col: 12 },
+          { palabra: "VERGÜENZA", pista: "¿Qué emoción sentimos cuando creemos que los demás se burlan de nosotros?", dir: "H", fila: 26, col: 5 },
+          { palabra: "OPTIMISMO", pista: "¿Qué emoción positiva nos ayuda a seguir creyendo que algo bueno pasará?", dir: "H", fila: 29, col: 9 },
+
+          // Verticales
+          { palabra: "MELANCOLÍA", pista: "¿Qué emoción aparece cuando perdemos algo importante o estamos desanimados?", dir: "V", fila: 2, col: 6 },
+          { palabra: "TEMOR", pista: "¿Cuál es la emoción que sentimos ante un peligro real o imaginado?", dir: "V", fila: 5, col: 12 },
+          { palabra: "REPULSIÓN", pista: "¿Qué emoción sentimos ante algo que nos desagrada profundamente?", dir: "V", fila: 7, col: 18 },
+          { palabra: "ENFADO", pista: "¿Qué emoción fuerte surge cuando algo nos molesta o frustra mucho?", dir: "V", fila: 10, col: 22 },
+          { palabra: "INTERÉS", pista: "¿Qué emoción sentimos cuando algo nos atrae y queremos aprender más?", dir: "V", fila: 13, col: 26 },
+          { palabra: "NERVIOSISMO", pista: "¿Qué emoción sentimos cuando estamos anticipando algo con preocupación o estrés?", dir: "V", fila: 15, col: 10 },
+          { palabra: "SATISFACCIÓN", pista: "¿Qué emoción sentimos cuando alcanzamos una meta importante?", dir: "V", fila: 18, col: 14 }
+        ]
+      },
+      adulto: {
+        palabras: [
+          // Horizontales
+          { palabra: "JÚBILO", pista: "¿Cuál es la emoción que se experimenta ante un estímulo placentero o satisfactorio?", dir: "H", fila: 6, col: 5 },
+          { palabra: "REMORDIMIENTO", pista: "¿Qué emoción moral se genera al reconocer que hemos hecho daño a otros?", dir: "H", fila: 9, col: 3 },
+          { palabra: "APEGO", pista: "¿Qué emoción compleja vincula afecto, cuidado y apego hacia otro ser?", dir: "H", fila: 13, col: 11 },
+          { palabra: "CELOS", pista: "¿Qué emoción se vincula al temor de perder la atención o el afecto de alguien?", dir: "H", fila: 17, col: 16 },
+          { palabra: "PERPLEJIDAD", pista: "¿Qué emoción aparece como reacción súbita ante lo inesperado?", dir: "H", fila: 21, col: 8 },
+          { palabra: "ENVIDIA", pista: "¿Qué emoción surge al comparar y desear lo que otro posee, generando malestar?", dir: "H", fila: 24, col: 13 },
+          { palabra: "VERGÜENZA", pista: "¿Qué emoción social sentimos cuando transgredimos normas y somos juzgados?", dir: "H", fila: 27, col: 6 },
+          { palabra: "ESPERANZA", pista: "¿Qué emoción se orienta al futuro con una expectativa de mejora o bienestar?", dir: "H", fila: 30, col: 10 },
+
+          // Verticales
+          { palabra: "DESOLACIÓN", pista: "¿Qué emoción se manifiesta ante una pérdida, desilusión o frustración profunda?", dir: "V", fila: 4, col: 7 },
+          { palabra: "MIEDO", pista: "¿Qué emoción adaptativa surge como respuesta a un peligro real o percibido?", dir: "V", fila: 6, col: 14 },
+          { palabra: "DISGUSTO", pista: "¿Qué emoción básica se activa ante estímulos que provocan rechazo físico o moral?", dir: "V", fila: 8, col: 20 },
+          { palabra: "IRA", pista: "¿Cómo se llama la emoción intensa provocada por una injusticia o impedimento?", dir: "V", fila: 11, col: 24 },
+          { palabra: "CURIOSIDAD", pista: "¿Qué emoción facilita el aprendizaje y la exploración de lo novedoso?", dir: "V", fila: 14, col: 28 },
+          { palabra: "ANSIEDAD", pista: "¿Qué emoción anticipatoria genera tensión frente a eventos inciertos?", dir: "V", fila: 16, col: 12 },
+          { palabra: "ORGULLO", pista: "¿Qué emoción experimentamos cuando valoramos positivamente nuestros logros?", dir: "V", fila: 19, col: 16 }
+        ]
+      }
+    };
+
+    // Variables globales
+    let currentPista = 0;
+    let currentEdad = 'niño';
+    let palabrasActuales = [];
+    let celdas = [];
+    const TAMANO_TABLERO = 30;
+
+    // Inicializar el crucigrama
+    function initCrucigrama() {
+      currentEdad = document.getElementById("edad").value;
+      palabrasActuales = [...crucigramas[currentEdad].palabras];
+      
+      // Mezclar las palabras para que aparezcan en orden aleatorio
+      palabrasActuales = shuffleArray(palabrasActuales);
+      
+      crearTablero();
+      mostrarPistas();
+    }
+
+    // Mezclar array (Fisher-Yates algorithm)
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Cambiar edad y reiniciar
+   // Cambiar edad y reiniciar
+function mostrarPreguntasPorEdad() {
+  currentEdad = document.getElementById("edad").value;
+  reiniciar();
+}
+
+// Inicializar el crucigrama
+function initCrucigrama() {
+  currentEdad = document.getElementById("edad").value;
+  palabrasActuales = [...crucigramas[currentEdad].palabras];
+  
+  // Mezclar las palabras para que aparezcan en orden aleatorio
+  palabrasActuales = shuffleArray(palabrasActuales);
+  
+  crearTablero();
+  mostrarPistas();
+}
+
+    // Crear el tablero
+    function crearTablero() {
+      const grid = document.getElementById("crossword");
+      grid.innerHTML = "";
+      
+      // Inicializar matriz de celdas
+      celdas = Array(TAMANO_TABLERO).fill().map(() => Array(TAMANO_TABLERO).fill(null));
+      
+      // Numeración de pistas
+      const numeros = {};
+      let contadorPistas = 1;
+      
+      // Colocar palabras en el tablero
+      palabrasActuales.forEach((palabraObj, index) => {
+        const { palabra, dir, fila, col } = palabraObj;
+        const filaIdx = fila - 1;
+        const colIdx = col - 1;
+        
+        // Asignar número a la primera letra
+        if (!numeros[`${filaIdx},${colIdx}`]) {
+          numeros[`${filaIdx},${colIdx}`] = contadorPistas++;
+        }
+        
+        // Colocar letras en el tablero
+        for (let i = 0; i < palabra.length; i++) {
+          const f = dir === "H" ? filaIdx : filaIdx + i;
+          const c = dir === "H" ? colIdx + i : colIdx;
+          
+          if (f >= 0 && f < TAMANO_TABLERO && c >= 0 && c < TAMANO_TABLERO) {
+            if (!celdas[f][c]) {
+              const input = document.createElement("input");
+              input.className = "cell";
+              input.type = "text";
+              input.maxLength = 1;
+              input.dataset.correct = palabra[i].toUpperCase();
+              input.dataset.fila = f;
+              input.dataset.col = c;
+              input.dataset.palabraIndex = index;
+              input.dataset.letraIndex = i;
+              input.dataset.dir = dir;
+              
+              // Eventos para navegación entre celdas
+              input.addEventListener('input', manejarInput);
+              input.addEventListener('keydown', manejarTeclas);
+              
+              celdas[f][c] = input;
+            }
+          }
+        }
+      });
+      
+      // Crear el grid visual
+      for (let i = 0; i < TAMANO_TABLERO; i++) {
+        for (let j = 0; j < TAMANO_TABLERO; j++) {
+          if (celdas[i][j]) {
+            const cell = celdas[i][j];
+            const num = numeros[`${i},${j}`];
+            if (num) {
+              const span = document.createElement("span");
+              span.className = "cell-number";
+              span.textContent = num;
+              cell.appendChild(span);
+            }
+            grid.appendChild(cell);
+          } else {
+            grid.appendChild(crearCeldaNegra());
+          }
+        }
+      }
+    }
+
+    // Crear celda negra (bloque)
+    function crearCeldaNegra() {
+      const div = document.createElement("div");
+      div.className = "cell black";
+      return div;
+    }
+
+    // Manejar entrada de texto
+    function manejarInput(e) {
+      const input = e.target;
+      const valor = input.value.toUpperCase();
+      
+      if (valor && input.dataset.correct && valor !== input.dataset.correct) {
+        input.style.color = "red";
+      } else {
+        input.style.color = "black";
+      }
+      
+      // Auto-avance al siguiente campo
+      if (valor.length === 1) {
+        const dir = input.dataset.dir;
+        const fila = parseInt(input.dataset.fila);
+        const col = parseInt(input.dataset.col);
+        
+        if (dir === "H") {
+          if (col < TAMANO_TABLERO-1 && celdas[fila][col + 1] && !celdas[fila][col + 1].disabled) {
+            celdas[fila][col + 1].focus();
+          }
+        } else {
+          if (fila < TAMANO_TABLERO-1 && celdas[fila + 1][col] && !celdas[fila + 1][col].disabled) {
+            celdas[fila + 1][col].focus();
+          }
+        }
+      }
+    }
+
+    // Manejar teclas especiales
+    function manejarTeclas(e) {
+      const input = e.target;
+      const fila = parseInt(input.dataset.fila);
+      const col = parseInt(input.dataset.col);
+      const dir = input.dataset.dir;
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          if (col > 0 && celdas[fila][col - 1] && !celdas[fila][col - 1].disabled) {
+            celdas[fila][col - 1].focus();
+          }
+          e.preventDefault();
+          break;
+        case 'ArrowRight':
+          if (col < TAMANO_TABLERO-1 && celdas[fila][col + 1] && !celdas[fila][col + 1].disabled) {
+            celdas[fila][col + 1].focus();
+          }
+          e.preventDefault();
+          break;
+        case 'ArrowUp':
+          if (fila > 0 && celdas[fila - 1][col] && !celdas[fila - 1][col].disabled) {
+            celdas[fila - 1][col].focus();
+          }
+          e.preventDefault();
+          break;
+        case 'ArrowDown':
+          if (fila < TAMANO_TABLERO-1 && celdas[fila + 1][col] && !celdas[fila + 1][col].disabled) {
+            celdas[fila + 1][col].focus();
+          }
+          e.preventDefault();
+          break;
+        case 'Backspace':
+          if (input.value === '') {
+            if (dir === "H") {
+              if (col > 0 && celdas[fila][col - 1] && !celdas[fila][col - 1].disabled) {
+                celdas[fila][col - 1].focus();
+              }
+            } else {
+              if (fila > 0 && celdas[fila - 1][col] && !celdas[fila - 1][col].disabled) {
+                celdas[fila - 1][col].focus();
+              }
+            }
+          }
+          break;
+        case 'Tab':
+          // Manejar tab para moverse a la siguiente celda disponible
+          e.preventDefault();
+          let nextFila = fila;
+          let nextCol = col + 1;
+          
+          if (nextCol > TAMANO_TABLERO-1) {
+            nextCol = 0;
+            nextFila++;
+            if (nextFila > TAMANO_TABLERO-1) nextFila = 0;
+          }
+          
+          while (nextFila < TAMANO_TABLERO && (!celdas[nextFila][nextCol] || celdas[nextFila][nextCol].disabled)) {
+            nextCol++;
+            if (nextCol > TAMANO_TABLERO-1) {
+              nextCol = 0;
+              nextFila++;
+            }
+          }
+          
+          if (nextFila < TAMANO_TABLERO && celdas[nextFila][nextCol]) {
+            celdas[nextFila][nextCol].focus();
+          }
+          break;
+      }
+    }
+
+    // Mostrar pistas
+    function mostrarPistas() {
+      const horiz = document.getElementById("horizontales");
+      const vert = document.getElementById("verticales");
+      
+      // Filtrar pistas horizontales y verticales
+      const horizontales = palabrasActuales.filter(p => p.dir === "H");
+      const verticales = palabrasActuales.filter(p => p.dir === "V");
+      
+      // Ordenar por posición en la cuadrícula
+      horizontales.sort((a, b) => (a.fila - b.fila) || (a.col - b.col));
+      verticales.sort((a, b) => (a.col - b.col) || (a.fila - b.fila));
+      
+      // Mostrar pistas horizontales
+      let htmlHoriz = "<h3>Horizontales</h3>";
+      horizontales.forEach((p, i) => {
+        const num = i + 1;
+        htmlHoriz += `
+          <div class="clue" onclick="resaltarPalabra(${p.fila-1}, ${p.col-1}, '${p.dir}')">
+            <span class="clue-number">${num}</span>
+            <span class="clue-text">${p.pista}</span>
+            <span class="clue-speaker" onclick="leerTexto('${p.pista}'); event.stopPropagation();">🔊</span>
+          </div>
+        `;
+      });
+      horiz.innerHTML = htmlHoriz;
+      
+      // Mostrar pistas verticales
+      let htmlVert = "<h3>Verticales</h3>";
+      verticales.forEach((p, i) => {
+        const num = horizontales.length + i + 1;
+        htmlVert += `
+          <div class="clue" onclick="resaltarPalabra(${p.fila-1}, ${p.col-1}, '${p.dir}')">
+            <span class="clue-number">${num}</span>
+            <span class="clue-text">${p.pista}</span>
+            <span class="clue-speaker" onclick="leerTexto('${p.pista}'); event.stopPropagation();">🔊</span>
+          </div>
+        `;
+      });
+      vert.innerHTML = htmlVert;
+    }
+
+    // Resaltar palabra en el tablero
+    function resaltarPalabra(fila, col, dir) {
+      // Primero quitar cualquier resaltado anterior
+      const celdas = document.querySelectorAll("input.cell");
+      celdas.forEach(c => {
+        c.style.backgroundColor = "#fff";
+        c.style.fontWeight = "normal";
+      });
+      
+      // Encontrar la palabra que comienza en esta posición y dirección
+      const palabraObj = palabrasActuales.find(p => 
+        (p.fila-1) === fila && 
+        (p.col-1) === col && 
+        p.dir === dir
+      );
+      
+      if (palabraObj) {
+        const { palabra, dir } = palabraObj;
+        
+        // Resaltar cada letra de la palabra
+        for (let i = 0; i < palabra.length; i++) {
+          const f = dir === "H" ? fila : fila + i;
+          const c = dir === "H" ? col + i : col;
+          
+          if (f >= 0 && f < TAMANO_TABLERO && c >= 0 && c < TAMANO_TABLERO && celdas[f] && celdas[f][c]) {
+            celdas[f][c].style.backgroundColor = "#ffeb3b";
+            celdas[f][c].style.fontWeight = "bold";
+          }
+        }
+        
+        // Enfocar la primera letra
+        if (celdas[fila] && celdas[fila][col]) {
+          celdas[fila][col].focus();
+        }
+      }
+    }
+
+    // Leer texto con síntesis de voz
+    function leerTexto(texto) {
+      if ('speechSynthesis' in window) {
+        const utter = new SpeechSynthesisUtterance(texto);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+      } else {
+        alert("Tu navegador no soporta la función de voz. Intenta con Chrome o Edge.");
+      }
+    }
+
+    // Leer pista actual
+    function leerPistaActual() {
+      const todasPistas = [
+        ...document.querySelectorAll("#horizontales .clue-text"),
+        ...document.querySelectorAll("#verticales .clue-text")
+      ];
+      
+      if (currentPista >= todasPistas.length) currentPista = 0;
+      const pista = todasPistas[currentPista].textContent;
+      leerTexto(pista);
+      
+      // Resaltar la pista actual
+      todasPistas.forEach((p, i) => {
+        p.parentElement.style.backgroundColor = i === currentPista ? "rgba(255, 215, 0, 0.3)" : "transparent";
+      });
+      
+      currentPista++;
+    }
+
+    // Verificar respuestas
+    function verificar() {
+      const inputs = document.querySelectorAll("input.cell");
+      let correctas = 0;
+      let total = 0;
+      
+      inputs.forEach(input => {
+        if (input.dataset.correct) {
+          total++;
+          const valor = input.value.toUpperCase();
+          const correcta = input.dataset.correct.toUpperCase();
+          
+          if (valor === correcta) {
+            input.style.backgroundColor = "#c8e6c9";
+            correctas++;
+          } else if (valor) {
+            input.style.backgroundColor = "#ffcdd2";
+          } else {
+            input.style.backgroundColor = "#fff";
+          }
+        }
+      });
+      
+      if (correctas === total) {
+        document.getElementById("mensajeFinal").innerHTML = "🎉 ¡Felicidades! Has completado el crucigrama correctamente.";
+      } else {
+        document.getElementById("mensajeFinal").innerHTML = `Tienes ${correctas} de ${total} respuestas correctas. Sigue intentando.`;
+      }
+    }
+
+    // Insertar palabra completa
+    function insertarPalabra() {
+      const inputPalabra = document.getElementById("wordInput");
+      const palabra = inputPalabra.value.trim().toUpperCase();
+      
+      if (!palabra) {
+        alert("Por favor escribe una palabra primero");
+        return;
+      }
+      
+      // Buscar la palabra en las pistas
+      const palabraObj = palabrasActuales.find(p => 
+        p.palabra === palabra || 
+        p.palabra.replace(/[^A-Za-z]/g, '') === palabra
+      );
+      
+      if (palabraObj) {
+        const { palabra: palabraCorrecta, dir, fila, col } = palabraObj;
+        const filaIdx = fila - 1;
+        const colIdx = col - 1;
+        
+        // Insertar letra por letra
+        for (let i = 0; i < palabraCorrecta.length; i++) {
+          const f = dir === "H" ? filaIdx : filaIdx + i;
+          const c = dir === "H" ? colIdx + i : colIdx;
+          
+          if (f >= 0 && f < TAMANO_TABLERO && c >= 0 && c < TAMANO_TABLERO && celdas[f] && celdas[f][c]) {
+            celdas[f][c].value = palabraCorrecta[i].toUpperCase();
+            celdas[f][c].style.color = "black";
+          }
+        }
+        
+        // Resaltar la palabra insertada
+        resaltarPalabra(filaIdx, colIdx, dir);
+        inputPalabra.value = "";
+      } else {
+        alert("Esa palabra no coincide con ninguna pista. Intenta con otra.");
+      }
+    }
+
+   // Terminar el crucigrama
+// Terminar el crucigrama - Versión Premium
+function terminar() {
+    verificar(); // Primero verifica las respuestas
+    
+    // Contadores por sección
+    let horizontalesCompletas = 0;
+    let verticalesCompletas = 0;
+    const TOTAL_HORIZONTALES = 8;
+    const TOTAL_VERTICALES = 7;
+    
+    // Verificar palabras completas (el mismo código de conteo preciso que funciona bien)
+    palabrasActuales.forEach(palabraObj => {
+        let completa = true;
+        for (let i = 0; i < palabraObj.palabra.length; i++) {
+            const fila = palabraObj.dir === "H" ? palabraObj.fila - 1 : palabraObj.fila - 1 + i;
+            const col = palabraObj.dir === "H" ? palabraObj.col - 1 + i : palabraObj.col - 1;
+            const input = celdas[fila]?.[col];
+            if (!input || input.value.toUpperCase() !== palabraObj.palabra[i].toUpperCase()) {
+                completa = false;
+                break;
+            }
+        }
+        if (completa) {
+            palabraObj.dir === "H" ? horizontalesCompletas++ : verticalesCompletas++;
+        }
+    });
+    
+    // Calcular porcentajes
+    const porcentajeHorizontal = Math.round((horizontalesCompletas / TOTAL_HORIZONTALES) * 100);
+    const porcentajeVertical = Math.round((verticalesCompletas / TOTAL_VERTICALES) * 100);
+    const totalCorrectas = horizontalesCompletas + verticalesCompletas;
+    const porcentajeTotal = Math.round((totalCorrectas / (TOTAL_HORIZONTALES + TOTAL_VERTICALES)) * 100);
+    
+    // Crear mensaje premium con efectos 3D
+    let mensaje = `
+        <div style="
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px auto;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3),
+                        0 0 0 1px rgba(255,215,0,0.3),
+                        0 0 20px rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.2);
+            color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+        ">
+            <h3 style="
+                margin: 0 0 20px 0;
+                color: #FFD700;
+                font-size: 1.8em;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+                position: relative;
+                display: inline-block;
+            ">
+                <span style="
+                    content: '';
+                    position: absolute;
+                    bottom: -8px;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: linear-gradient(90deg, transparent, #FFD700, transparent);
+                "></span>
+                Resultados Finales
+            </h3>
+            
+            <div style="
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin: 25px 0;
+                flex-wrap: wrap;
+            ">
+                <!-- Tarjeta Horizontales -->
+                <div style="
+                    background: linear-gradient(145deg, #2a2a2a 0%, #1e1e1e 100%);
+                    padding: 20px 15px;
+                    border-radius: 10px;
+                    min-width: 140px;
+                    box-shadow: 5px 5px 15px rgba(0,0,0,0.4),
+                                -1px -1px 5px rgba(255,255,255,0.05);
+                    border-top: 1px solid rgba(255,215,0,0.3);
+                    transform-style: preserve-3d;
+                    transform: perspective(500px) rotateX(5deg);
+                    transition: all 0.3s ease;
+                ">
+                    <p style="
+                        color: #FFD700;
+                        margin: 0 0 10px 0;
+                        font-size: 1.1em;
+                        font-weight: bold;
+                    ">Horizontales</p>
+                    <p style="
+                        margin: 5px 0;
+                        font-size: 1.4em;
+                        font-weight: bold;
+                    ">${horizontalesCompletas}<span style="font-size: 0.7em; opacity: 0.8;">/${TOTAL_HORIZONTALES}</span></p>
+                    <div style="
+                        background: rgba(0,0,0,0.3);
+                        height: 8px;
+                        border-radius: 4px;
+                        margin: 10px 0;
+                        overflow: hidden;
+                    ">
+                        <div style="
+                            background: linear-gradient(90deg, #FFD700, #F1C40F);
+                            height: 100%;
+                            width: ${porcentajeHorizontal}%;
+                            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+                        "></div>
+                    </div>
+                    <p style="
+                        margin: 5px 0 0 0;
+                        font-size: 1.3em;
+                        font-weight: bold;
+                        color: ${porcentajeHorizontal >= 50 ? '#FFD700' : '#E74C3C'};
+                        text-shadow: 0 0 8px ${porcentajeHorizontal >= 50 ? 'rgba(255,215,0,0.4)' : 'rgba(231,76,60,0.4)'};
+                    ">${porcentajeHorizontal}%</p>
+                </div>
+                
+                <!-- Tarjeta Verticales -->
+                <div style="
+                    background: linear-gradient(145deg, #2a2a2a 0%, #1e1e1e 100%);
+                    padding: 20px 15px;
+                    border-radius: 10px;
+                    min-width: 140px;
+                    box-shadow: 5px 5px 15px rgba(0,0,0,0.4),
+                                -1px -1px 5px rgba(255,255,255,0.05);
+                    border-top: 1px solid rgba(255,215,0,0.3);
+                    transform-style: preserve-3d;
+                    transform: perspective(500px) rotateX(5deg);
+                    transition: all 0.3s ease;
+                ">
+                    <p style="
+                        color: #FFD700;
+                        margin: 0 0 10px 0;
+                        font-size: 1.1em;
+                        font-weight: bold;
+                    ">Verticales</p>
+                    <p style="
+                        margin: 5px 0;
+                        font-size: 1.4em;
+                        font-weight: bold;
+                    ">${verticalesCompletas}<span style="font-size: 0.7em; opacity: 0.8;">/${TOTAL_VERTICALES}</span></p>
+                    <div style="
+                        background: rgba(0,0,0,0.3);
+                        height: 8px;
+                        border-radius: 4px;
+                        margin: 10px 0;
+                        overflow: hidden;
+                    ">
+                        <div style="
+                            background: linear-gradient(90deg, #FFD700, #F1C40F);
+                            height: 100%;
+                            width: ${porcentajeVertical}%;
+                            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+                        "></div>
+                    </div>
+                    <p style="
+                        margin: 5px 0 0 0;
+                        font-size: 1.3em;
+                        font-weight: bold;
+                        color: ${porcentajeVertical >= 50 ? '#FFD700' : '#E74C3C'};
+                        text-shadow: 0 0 8px ${porcentajeVertical >= 50 ? 'rgba(255,215,0,0.4)' : 'rgba(231,76,60,0.4)'};
+                    ">${porcentajeVertical}%</p>
+                </div>
+            </div>
+            
+            <!-- Tarjeta Total -->
+            <div style="
+                background: linear-gradient(145deg, #121212 0%, #1e1e1e 100%);
+                padding: 20px;
+                border-radius: 10px;
+                margin: 20px auto 10px auto;
+                max-width: 300px;
+                box-shadow: inset 0 0 15px rgba(0,0,0,0.5),
+                            0 5px 20px rgba(0,0,0,0.4);
+                border: 1px solid rgba(255,215,0,0.2);
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+                    animation: rotate 20s linear infinite;
+                    z-index: 0;
+                "></div>
+                <p style="
+                    margin: 0 0 10px 0;
+                    color: #FFD700;
+                    font-size: 1.2em;
+                    position: relative;
+                    z-index: 1;
+                ">Total de respuestas</p>
+                <p style="
+                    margin: 5px 0;
+                    font-size: 2em;
+                    font-weight: bold;
+                    position: relative;
+                    z-index: 1;
+                ">${totalCorrectas}<span style="font-size: 0.6em; opacity: 0.8;">/${TOTAL_HORIZONTALES + TOTAL_VERTICALES}</span></p>
+                <div style="
+                    background: rgba(0,0,0,0.4);
+                    height: 10px;
+                    border-radius: 5px;
+                    margin: 15px 0;
+                    overflow: hidden;
+                    position: relative;
+                    z-index: 1;
+                ">
+                    <div style="
+                        background: linear-gradient(90deg, #FFD700, #F1C40F);
+                        height: 100%;
+                        width: ${porcentajeTotal}%;
+                        box-shadow: 0 0 15px rgba(255,215,0,0.7);
+                    "></div>
+                </div>
+                <p style="
+                    margin: 10px 0 0 0;
+                    font-size: 1.8em;
+                    font-weight: bold;
+                    color: ${porcentajeTotal >= 50 ? '#FFD700' : '#E74C3C'};
+                    text-shadow: 0 0 12px ${porcentajeTotal >= 50 ? 'rgba(255,215,0,0.6)' : 'rgba(231,76,60,0.6)'};
+                    position: relative;
+                    z-index: 1;
+                ">${porcentajeTotal}%</p>
+            </div>
+            
+            <p style="
+                margin: 25px 0 0 0;
+                font-style: italic;
+                color: #aaa;
+                font-size: 0.9em;
+                position: relative;
+            ">
+                <span style="
+                    display: inline-block;
+                    width: 30px;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, #FFD700, transparent);
+                    margin: 0 10px 5px 10px;
+                    vertical-align: middle;
+                "></span>
+                ¡Gracias por completar el crucigrama!
+                <span style="
+                    display: inline-block;
+                    width: 30px;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, #FFD700, transparent);
+                    margin: 0 10px 5px 10px;
+                    vertical-align: middle;
+                "></span>
+            </p>
+        </div>
+        
+        <style>
+            @keyframes rotate {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        </style>
+    `;
+    
+    document.getElementById("mensajeFinal").innerHTML = mensaje;
+}
+
+    // Reiniciar el crucigrama
+    function reiniciar() {
+      // Limpiar inputs
+      const inputs = document.querySelectorAll("input.cell");
+      inputs.forEach(input => {
+        input.value = "";
+        input.style.backgroundColor = "#fff";
+        input.style.color = "black";
+      });
+      
+      // Limpiar mensaje
+      document.getElementById("mensajeFinal").innerHTML = "";
+      
+      // Mezclar las palabras de nuevo
+      palabrasActuales = shuffleArray([...crucigramas[currentEdad].palabras]);
+      
+      // Recrear el tablero
+      crearTablero();
+      mostrarPistas();
+      
+      // Resetear contador de pistas
+      currentPista = 0;
+    }
+
+    // Inicializar al cargar la página
+    document.addEventListener('DOMContentLoaded', initCrucigrama);
+  </script>
+          
+          <footer style="
+  background-color: #000;
+  color: #FFD700;
+  text-align: center;
+  padding: 25px 15px;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.8em;
+  border-top: 2px solid #FFD700;
+  line-height: 1;
+">
+  <p style="margin: 5px 0;">🌟 Parte del proyecto creativo en evolución <strong style="color: #fff;">“Emociones en el Aula”</strong></p>
+  <p style="margin: 5px 0;">🔧 Este proyecto se mejora constantemente con nuevas herramientas y experiencias reales.</p>
+  <p style="margin: 5px 0;">📘 Desarrollado con 💛 por <strong style="color: #fff;">Yobana Orozco Benavides</strong></p>
+  <p style="margin: 5px 0;">🔒 Uso educativo — <span style="color:#FFA500; font-weight: bold;">sin fines comerciales</span></p>
+  <p style="margin: 8px 0;">Más en: 
+    <a href="https://yobanaorozcoartista.bio.link/" target="_blank" style="color: #FFD700; text-decoration: underline; font-weight: bold;">
+      yobanaorozcoartista.bio.link
+    </a>
+  </p>
+
+  <!-- Imágenes insertadas -->
+  <div style="margin-top: 15px;">
+    <img src="https://i.postimg.cc/dqKj7LQQ/480702220-618041787505911-8280549859336367380-n.jpg" 
+         alt="Logo 1" 
+         style="width: 60px; height: auto; margin: 0 10px; border-radius: 8px; border: 1px solid #FFD700;">
+    <img src="https://i.postimg.cc/NfcBdfV4/418b1c0f-8d2a-463f-9cb1-271bd0abfd0e-1.png" 
+         alt="Logo 2" 
+         style="width: 60px; height: auto; margin: 0 10px; border-radius: 8px; border: 1px solid #FFD700;">
+  </div>
+
+  <p style="margin-top: 12px; font-size: 0.8em; color: #888;">© 2025 - Todos los derechos reservados</p>
+</footer>
+
+</body>
+</html>
