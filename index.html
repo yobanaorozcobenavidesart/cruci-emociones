@@ -234,26 +234,46 @@
          style="max-width: 200px; height: auto;" />
   </div>
     
-   <p>Cruci-Emociones es un juego interactivo de crucigramas diseñado para ayudar a niños, jóvenes y adultos a reconocer, comprender y expresar emociones básicas, sociales y complejas. A través de pistas reflexivas y palabras ocultas, los jugadores aprenderán vocabulario emocional mientras ejercitan su mente. Al finalizar el crucigrama, podrán hacer clic en el botón "Terminar" para ver su resultado y conocer cuántas respuestas fueron correctas.</p>
+  <style>
+  .texto-cruciemociones {
+    font-family: "Times New Roman", serif;
+    font-size: 12pt;
+    color: white;
+    line-height: 1.1;
+  }
 
-        
-        <h2>Niveles adaptados por edad</h2>
-        
-        <div class="age-levels">
-            <div class="age-level">
-              <li><strong>Niños: Emociones básicas (alegría, tristeza, miedo)</strong>
-                <li><strong>Jóvenes: Emociones sociales (celos, vergüenza, optimismo)</strong>
-                   <li><strong>Adultos: Emociones complejas (desolación, perplejidad, remordimiento)</strong>
-                           
-        <h2>Beneficios</h2>
-        
-        <div class="benefits">
-            <div class="benefit-item">Desarrolla inteligencia emocional - Aprende a identificar y nombrar emociones.</div>
-            <div class="benefit-item">Estimula el vocabulario - Amplía tu lenguaje emocional para expresarte mejor.</div>
-            <div class="benefit-item">Ejercita la mente - Mejora la concentración, memoria y pensamiento lógico.</div>
-            <div class="benefit-item">Herramienta educativa - Ideal para padres, docentes y terapeutas.</div>
-            <div class="benefit-item">Adaptable - Tres niveles de dificultad según la edad del jugador.</div>
-            <div class="benefit-item">Inclusivo - Diseñado para ser accesible y con opción de audio para las pistas.</div>
+  .texto-cruciemociones h2 {
+    color: gold;
+    font-size: 14pt;
+    margin-top: 20px;
+  }
+
+  .texto-cruciemociones li {
+    margin-bottom: 5px;
+  }
+</style>
+
+<div class="texto-cruciemociones">
+  <p>Cruci-Emociones es un juego interactivo de crucigramas diseñado para ayudar a niños, jóvenes y adultos a reconocer, comprender y expresar emociones básicas, sociales y complejas. A través de pistas reflexivas y palabras ocultas, los jugadores aprenderán vocabulario emocional mientras ejercitan su mente. Al finalizar el crucigrama, podrán hacer clic en el botón "Terminar" para ver su resultado y conocer cuántas respuestas fueron correctas.</p>
+
+  <h2>Niveles adaptados por edad</h2>
+  <ul>
+    <li><strong>Niños: Emociones básicas (alegría, tristeza, miedo)</strong></li>
+    <li><strong>Jóvenes: Emociones sociales (celos, vergüenza, optimismo)</strong></li>
+    <li><strong>Adultos: Emociones complejas (desolación, perplejidad, remordimiento)</strong></li>
+  </ul>
+
+  <h2>Beneficios</h2>
+  <ul>
+    <li>Desarrolla inteligencia emocional - Aprende a identificar y nombrar emociones.</li>
+    <li>Estimula el vocabulario - Amplía tu lenguaje emocional para expresarte mejor.</li>
+    <li>Ejercita la mente - Mejora la concentración, memoria y pensamiento lógico.</li>
+    <li>Herramienta educativa - Ideal para padres, docentes y terapeutas.</li>
+    <li>Adaptable - Tres niveles de dificultad según la edad del jugador.</li>
+    <li>Inclusivo - Diseñado para ser accesible y con opción de audio para las pistas.</li>
+  </ul>
+</div>
+
         </div>
             
                      
@@ -263,9 +283,9 @@
   <div class="controls">
   <select id="edad" onchange="mostrarPreguntasPorEdad()">
 
-      <option value="niño">Niño</option>
-      <option value="joven">Joven</option>
-      <option value="adulto">Adulto</option>
+      <option value="niño">🧒👧Niñ@</option>
+      <option value="joven">🙋‍♂️🙋‍♀️Joven</option>
+      <option value="adulto">👩🧔Adulto</option>
     </select>
 
   
